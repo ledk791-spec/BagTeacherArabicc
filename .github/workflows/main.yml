@@ -5,6 +5,7 @@ on:
   push:
     branches:
       - main
+      - master
 
 jobs:
   build:
@@ -12,15 +13,17 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Extract project
         run: |
+          mkdir -p extracted
           unzip -q BagTeacherArabic_Full_Native_v2.zip -d extracted
-          cp -r extracted/BagTeacherArabic_Full_Native/. .
+          cp -r extracted/. .
+          rm -f BagTeacherArabic_Full_Native_v2.zip
 
       - name: Setup Java
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: '17'
