@@ -1,0 +1,41 @@
+name: Build Arabic Teacher Bag
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download project
+        uses: actions/checkout@v5
+
+      - name: Extract Android project
+        run: |
+          unzip -q ArabicTeacherBagClean.zip
+          cp -r ArabicTeacherBagClean/. .
+          rm -rf ArabicTeacherBagClean
+
+      - name: Setup Java
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.2'
+
+      - name: Build APK
+        run: gradle assembleDebug
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: ArabicTeacherBag-APK
+          path: app/build/outputs/apk/debug/app-debug.apk
